@@ -16,8 +16,8 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Inside Movie")
-                        .description("Inside Movie REST API Document")
+                        .title("GearFirst")
+                        .description("GearFirst REST API Document")
                         .version("1.0.0"))
                 .addServersItem(server);
     }

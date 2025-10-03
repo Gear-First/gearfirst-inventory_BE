@@ -29,6 +29,7 @@ class InventoryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @BeforeEach
     void setUp() {
         inventoryRepository.deleteAll();
@@ -41,14 +42,38 @@ class InventoryControllerTest {
                         .warehouse("A창고")
                         .build()
         );
+        inventoryRepository.save(
+                Inventory.builder()
+                        .inventoryName("에어필터")
+                        .inventoryCode("AF-001")
+                        .currentStock(0)
+                        .availableStock(0)
+                        .warehouse("B창고")
+                        .build()
+        );
     }
+
     @Test
-    void 재고목록조회_API() throws Exception {
+    void 재고전체조회_API() throws Exception {
         mockMvc.perform(get("/api/v1/inventory")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].inventoryName").value("브레이크 패드"))
-                .andExpect(jsonPath("$.data[0].currentStock").value(100));
+                .andExpect(jsonPath("$.data[1].inventoryName").value("에어필터"));
+    }
+
+    @Test
+    void 재고날짜검색_API() throws Exception {
+        String startDate = LocalDateTime.now().minusDays(1).toLocalDate().toString();
+        String endDate = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+
+        mockMvc.perform(get("/api/v1/inventory/search/date")
+                        .param("startDate", startDate)
+                        .param("endDate", endDate)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].inventoryCode").value("BP-001"))
+                .andExpect(jsonPath("$.data[1].inventoryCode").value("AF-001"));
     }
 
     @Test
@@ -58,7 +83,7 @@ class InventoryControllerTest {
         mockMvc.perform(get("/api/v1/inventory/" + inv.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.inventoryCode").value("BP-001"))
-                .andExpect(jsonPath("$.data.inventoryName").value("브레이크 패드"));
+                .andExpect(jsonPath("$.data.inventoryCode").value(inv.getInventoryCode()))
+                .andExpect(jsonPath("$.data.inventoryName").value(inv.getInventoryName()));
     }
 }
