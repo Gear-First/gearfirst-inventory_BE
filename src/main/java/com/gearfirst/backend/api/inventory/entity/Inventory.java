@@ -1,5 +1,6 @@
 package com.gearfirst.backend.api.inventory.entity;
 
+import com.gearfirst.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,10 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "inventory")
-public class Inventory {
+public class Inventory{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name= "invnetory_id")
     private Long id;
 
     @Column(name = "inventory_name", nullable = false, length = 100)
@@ -33,8 +35,7 @@ public class Inventory {
     @Column(name = "warehouse", length = 100)
     private String warehouse;
 
-    @Column(name = "inbound_date", updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "inbound_date", updatable = false, nullable = false)
     private LocalDateTime inboundDate;
 
     @Enumerated(EnumType.STRING)
