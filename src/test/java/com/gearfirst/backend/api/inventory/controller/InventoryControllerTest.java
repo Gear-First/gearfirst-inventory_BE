@@ -1,7 +1,7 @@
 package com.gearfirst.backend.api.inventory.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
 import com.gearfirst.backend.api.inventory.repository.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

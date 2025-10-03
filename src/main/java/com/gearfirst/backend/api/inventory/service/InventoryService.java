@@ -1,6 +1,6 @@
 package com.gearfirst.backend.api.inventory.service;
 
-import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
 
 import java.time.LocalDate;
 import java.util.List;

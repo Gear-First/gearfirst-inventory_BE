@@ -1,6 +1,6 @@
 package com.gearfirst.backend.api.inventory.service;
 
-import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
 import com.gearfirst.backend.api.inventory.repository.InventoryRepository;
 import com.gearfirst.backend.common.exception.NotFoundException;
 import com.gearfirst.backend.common.response.ErrorStatus;
@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class InventoryServiceImplTest {
