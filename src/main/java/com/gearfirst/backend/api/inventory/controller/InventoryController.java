@@ -28,7 +28,7 @@ public class InventoryController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getAllInventories(){
 
-        List<Inventory> inventories = inventoryService.getInventories(null, null);
+        List<Inventory> inventories = inventoryService.getAllInventories();
         List<InventoryResponse> responses = inventories.stream()
                 .map(InventoryResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -38,17 +38,18 @@ public class InventoryController {
 
     @Operation(summary = "재고 검색 API", description = "날짜로 필터링 하여 조회합니다.")
     @GetMapping("/search/date")
-    public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventories(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoriesByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        List<Inventory> inventories = inventoryService.getInventories(startDate, endDate);
+        List<Inventory> inventories = inventoryService.getInventoriesByDate(startDate, endDate);
         List<InventoryResponse> responses = inventories.stream()
                 .map(InventoryResponse::fromEntity)
                 .collect(Collectors.toList());
 
         return ApiResponse.success(SuccessStatus.GET_INVENTORY_LIST_SUCCESS, responses);
     }
+
     @Operation(summary = "재고 단건 조회 API", description = "단건 재고 데이터를 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<InventoryResponse>> getInventory(@PathVariable Long id) {

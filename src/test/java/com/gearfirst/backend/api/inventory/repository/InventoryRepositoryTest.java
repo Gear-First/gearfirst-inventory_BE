@@ -43,8 +43,8 @@ class InventoryRepositoryTest {
         inventoryRepository.save(inv1);
         inventoryRepository.save(inv2);
 
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now().plusDays(1);
+        LocalDateTime start = LocalDateTime.now().minusDays(1); //현재 시간에서 하루를 빼는 메서드
+        LocalDateTime end = LocalDateTime.now().plusDays(1);    //현재 시간에서 하루를 더하는 메서드
 
         // when
         List<Inventory> result = inventoryRepository.findByInboundDateBetween(start, end);

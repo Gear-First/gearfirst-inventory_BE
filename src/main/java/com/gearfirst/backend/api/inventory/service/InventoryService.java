@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface InventoryService {
-    List<Inventory> getInventories(LocalDate startDate, LocalDate endDate);
+    List<Inventory> getAllInventories();
+    List<Inventory> getInventoriesByDate(LocalDate startDate, LocalDate endDate);
     Inventory getInventory(Long id);
 }
