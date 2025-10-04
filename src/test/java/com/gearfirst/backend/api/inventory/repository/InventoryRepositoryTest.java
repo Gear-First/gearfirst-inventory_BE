@@ -1,6 +1,7 @@
 package com.gearfirst.backend.api.inventory.repository;
 
-import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
+import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class InventoryRepositoryTest {
@@ -28,7 +28,7 @@ class InventoryRepositoryTest {
                 .currentStock(50)
                 .availableStock(50)
                 .warehouse("서울 창고")
-                .inventoryStatus(Inventory.InventoryStatus.STABLE)
+                .inventoryStatus(InventoryStatus.STABLE)
                 .build();
 
         Inventory inv2 = Inventory.builder()
@@ -37,14 +37,14 @@ class InventoryRepositoryTest {
                 .currentStock(10)
                 .availableStock(10)
                 .warehouse("대전 창고")
-                .inventoryStatus(Inventory.InventoryStatus.NEED_RESTOCK)
+                .inventoryStatus(InventoryStatus.NEED_RESTOCK)
                 .build();
 
         inventoryRepository.save(inv1);
         inventoryRepository.save(inv2);
 
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now().plusDays(1);
+        LocalDateTime start = LocalDateTime.now().minusDays(1); //현재 시간에서 하루를 빼는 메서드
+        LocalDateTime end = LocalDateTime.now().plusDays(1);    //현재 시간에서 하루를 더하는 메서드
 
         // when
         List<Inventory> result = inventoryRepository.findByInboundDateBetween(start, end);

@@ -1,5 +1,6 @@
-package com.gearfirst.backend.api.inventory.entity;
+package com.gearfirst.backend.api.inventory.domain.entity;
 
+import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
 import com.gearfirst.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -78,10 +79,5 @@ public class Inventory{
         this.availableStock -= quantity;
     }
 
-
-    // === Enum ===
-    public enum InventoryStatus {
-        STABLE, NEED_RESTOCK
-    }
 }
 
