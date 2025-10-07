@@ -29,6 +29,7 @@ class InventoryRepositoryTest {
                 .currentStock(50)
                 .availableStock(50)
                 .warehouse("서울 창고")
+                .price(15000)
                 .inventoryStatus(InventoryStatus.STABLE)
                 .build();
 
@@ -38,6 +39,7 @@ class InventoryRepositoryTest {
                 .currentStock(10)
                 .availableStock(10)
                 .warehouse("대전 창고")
+                .price(21000)
                 .inventoryStatus(InventoryStatus.NEED_RESTOCK)
                 .build();
 
@@ -54,4 +56,26 @@ class InventoryRepositoryTest {
         assertThat(result).hasSize(2);
     }
 
+    @Test
+    void findByInventoryName(){
+        // given
+        Inventory inv1 = Inventory.builder()
+                .inventoryName("에어필터")
+                .inventoryCode("AF-001")
+                .currentStock(50)
+                .availableStock(50)
+                .warehouse("서울 창고")
+                .price(15000)
+                .inventoryStatus(InventoryStatus.STABLE)
+                .build();
+
+        inventoryRepository.save(inv1);
+
+        // when
+        List<Inventory> result = inventoryRepository.findByInventoryName("에어필터");
+
+        // then
+        assertThat(result.get(0).getInventoryName()).isEqualTo("에어필터");
+        assertThat(result.get(0).getWarehouse()).isEqualTo("서울 창고");
+    }
 }
