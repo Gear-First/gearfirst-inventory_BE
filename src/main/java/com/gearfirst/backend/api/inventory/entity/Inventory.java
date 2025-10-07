@@ -38,6 +38,9 @@ public class Inventory{
     @Column(name = "inbound_date", updatable = false, nullable = false)
     private LocalDateTime inboundDate;
 
+    @Column(name = "price", nullable = false)
+    private int price;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "inventory_status", nullable = false)
     private InventoryStatus inventoryStatus = InventoryStatus.STABLE;
@@ -55,12 +58,14 @@ public class Inventory{
                      int currentStock,
                      int availableStock,
                      String warehouse,
+                     int price,
                      InventoryStatus inventoryStatus) {
         this.inventoryName = inventoryName;
         this.inventoryCode = inventoryCode;
         this.currentStock = currentStock;
         this.availableStock = availableStock;
         this.warehouse = warehouse;
+        this.price = price;
         this.inventoryStatus = inventoryStatus != null ? inventoryStatus : InventoryStatus.STABLE;
     }
 
@@ -76,6 +81,13 @@ public class Inventory{
         if (this.availableStock < quantity) throw new IllegalStateException("가용 재고 부족");
         this.currentStock -= quantity;
         this.availableStock -= quantity;
+    }
+
+    public void updatePrice(int newPrice) {
+        if (newPrice <= 0) {
+            throw new IllegalArgumentException("가격은 0보다 커야 합니다.");
+        }
+        this.price = newPrice;
     }
 
 }

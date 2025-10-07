@@ -31,7 +31,7 @@ public class InventoryController {
         return ApiResponse.success(SuccessStatus.GET_INVENTORY_LIST_SUCCESS, responses);
     }
 
-    @Operation(summary = "재고 검색 API", description = "날짜로 필터링 하여 조회합니다.")
+    @Operation(summary = "재고 날짜 검색 API", description = "날짜로 필터링 하여 조회합니다.")
     @GetMapping("/search/date")
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoriesByDate(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -46,4 +46,12 @@ public class InventoryController {
         InventoryResponse response  = inventoryService.getInventory(id);
         return ApiResponse.success(SuccessStatus.GET_INVENTORY_SUCCESS, response);
     }
+
+    @Operation(summary = "재고 이름 검색 API", description = "이름으로 재고 데이터를 검색합니다..")
+    @GetMapping("/search/name")
+    public ResponseEntity<ApiResponse<List<InventoryResponse>>> researchInventoryByName(@RequestParam String name) {
+        List<InventoryResponse> responses  = inventoryService.getInventoryByName(name);
+        return ApiResponse.success(SuccessStatus.GET_INVENTORY_SUCCESS, responses);
+    }
+
 }

@@ -10,4 +10,5 @@ public interface InventoryService {
     List<InventoryResponse> getAllInventories();
     List<InventoryResponse> getInventoriesByDate(LocalDate startDate, LocalDate endDate);
     InventoryResponse getInventory(Long id);
+    List<InventoryResponse> getInventoryByName(String inventoryName);
 }

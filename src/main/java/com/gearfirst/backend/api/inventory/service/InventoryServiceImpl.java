@@ -45,4 +45,12 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_INVENTORY_EXCEPTION.getMessage()));
         return InventoryResponse.fromEntity(inventory);
     }
+
+    @Override
+    public List<InventoryResponse> getInventoryByName(String inventoryName) {
+        return inventoryRepository.findByInventoryName(inventoryName).stream()
+                .map(InventoryResponse::fromEntity)
+                .toList();
+    }
+
 }

@@ -2,6 +2,7 @@ package com.gearfirst.backend.api.inventory.repository;
 
 import com.gearfirst.backend.api.inventory.entity.Inventory;
 import com.gearfirst.backend.api.inventory.enums.InventoryStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +53,5 @@ class InventoryRepositoryTest {
         // then
         assertThat(result).hasSize(2);
     }
+
 }
