@@ -1,6 +1,6 @@
 package com.gearfirst.backend.api.inventory.repository;
 
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

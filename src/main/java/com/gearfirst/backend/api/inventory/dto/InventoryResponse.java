@@ -1,6 +1,6 @@
 package com.gearfirst.backend.api.inventory.dto;
 
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

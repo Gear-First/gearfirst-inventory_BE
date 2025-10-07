@@ -1,7 +1,6 @@
-package com.gearfirst.backend.api.inventory.domain.entity;
+package com.gearfirst.backend.api.inventory.entity;
 
-import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
-import com.gearfirst.backend.common.entity.BaseTimeEntity;
+import com.gearfirst.backend.api.inventory.enums.InventoryStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

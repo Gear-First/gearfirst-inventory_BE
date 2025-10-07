@@ -1,8 +1,8 @@
 package com.gearfirst.backend.api.inventory.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
-import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.enums.InventoryStatus;
 import com.gearfirst.backend.api.inventory.repository.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
