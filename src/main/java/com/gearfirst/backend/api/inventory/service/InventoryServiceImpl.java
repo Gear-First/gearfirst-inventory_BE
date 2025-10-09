@@ -1,6 +1,7 @@
 package com.gearfirst.backend.api.inventory.service;
 
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
+import com.gearfirst.backend.api.inventory.dto.InventoryResponse;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
 import com.gearfirst.backend.api.inventory.repository.InventoryRepository;
 import com.gearfirst.backend.common.exception.NotFoundException;
 import com.gearfirst.backend.common.response.ErrorStatus;
@@ -18,26 +19,38 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
 
     @Override
-    public List<Inventory> getAllInventories(){
-        return inventoryRepository.findAll();
+    public List<InventoryResponse> getAllInventories(){
+        return inventoryRepository.findAll().stream()
+                .map(InventoryResponse::fromEntity)
+                .toList();
     }
 
     @Override
-    public List<Inventory> getInventoriesByDate(LocalDate startDate, LocalDate endDate) {
+    public List<InventoryResponse> getInventoriesByDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("시작일은 종료일보다 이후일 수 없습니다.");
         }
 
-        return inventoryRepository.findByInboundDateBetween(
+        List<Inventory> inventores = inventoryRepository.findByInboundDateBetween(
                 startDate.atStartOfDay(),
                 endDate.atTime(LocalTime.MAX)
         );
+        return inventores.stream().map(InventoryResponse::fromEntity)
+                .toList();
     }
 
     @Override
-    public Inventory getInventory(Long id) {
-        return inventoryRepository.findById(id)
+    public InventoryResponse getInventory(Long id) {
+        Inventory inventory = inventoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_INVENTORY_EXCEPTION.getMessage()));
-
+        return InventoryResponse.fromEntity(inventory);
     }
+
+    @Override
+    public List<InventoryResponse> getInventoryByName(String inventoryName) {
+        return inventoryRepository.findByInventoryName(inventoryName).stream()
+                .map(InventoryResponse::fromEntity)
+                .toList();
+    }
+
 }

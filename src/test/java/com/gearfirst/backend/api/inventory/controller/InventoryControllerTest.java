@@ -1,8 +1,8 @@
 package com.gearfirst.backend.api.inventory.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
-import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.enums.InventoryStatus;
 import com.gearfirst.backend.api.inventory.repository.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,20 +37,22 @@ class InventoryControllerTest {
         inventoryRepository.save(
                 Inventory.builder()
                         .inventoryName("브레이크 패드")
-                        .inventoryCode("BP-001")
+                        .inventoryCode("BP-001-s")
                         .currentStock(100)
                         .availableStock(100)
-                        .warehouse("A창고")
+                        .warehouse("서울 창고")
+                        .price(15000)
                         .inventoryStatus(InventoryStatus.STABLE)
                         .build()
         );
         inventoryRepository.save(
                 Inventory.builder()
                         .inventoryName("에어필터")
-                        .inventoryCode("AF-001")
+                        .inventoryCode("AF-001-d")
                         .currentStock(0)
                         .availableStock(0)
-                        .warehouse("B창고")
+                        .warehouse("대전 창고")
+                        .price(21000)
                         .inventoryStatus(InventoryStatus.STABLE)
                         .build()
         );
@@ -76,7 +78,7 @@ class InventoryControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[*].inventoryCode")
-                        .value(containsInAnyOrder("BP-001", "AF-001")));
+                        .value(containsInAnyOrder("BP-001-s", "AF-001-d")));
     }
 
     @Test
@@ -90,4 +92,20 @@ class InventoryControllerTest {
                 .andExpect(jsonPath("$.data.inventoryCode").value(inv.getInventoryCode()))
                 .andExpect(jsonPath("$.data.inventoryName").value(inv.getInventoryName()));
     }
+
+    @Test
+    void 재고이름검색_API() throws Exception {
+        List<Inventory> inventories = inventoryRepository.findByInventoryName("브레이크 패드");
+        Inventory inv = inventories.get(0);
+
+        mockMvc.perform(get("/api/v1/inventory/search/name")
+                        .param("name", "브레이크 패드")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[*].inventoryCode")
+                        .value(containsInAnyOrder("BP-001-s")));
+
+    }
+
+
 }

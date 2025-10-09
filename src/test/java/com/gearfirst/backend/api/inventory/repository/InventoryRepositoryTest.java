@@ -1,7 +1,8 @@
 package com.gearfirst.backend.api.inventory.repository;
 
-import com.gearfirst.backend.api.inventory.domain.entity.Inventory;
-import com.gearfirst.backend.api.inventory.domain.enums.InventoryStatus;
+import com.gearfirst.backend.api.inventory.entity.Inventory;
+import com.gearfirst.backend.api.inventory.enums.InventoryStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ class InventoryRepositoryTest {
                 .currentStock(50)
                 .availableStock(50)
                 .warehouse("서울 창고")
+                .price(15000)
                 .inventoryStatus(InventoryStatus.STABLE)
                 .build();
 
@@ -37,6 +39,7 @@ class InventoryRepositoryTest {
                 .currentStock(10)
                 .availableStock(10)
                 .warehouse("대전 창고")
+                .price(21000)
                 .inventoryStatus(InventoryStatus.NEED_RESTOCK)
                 .build();
 
@@ -51,5 +54,28 @@ class InventoryRepositoryTest {
 
         // then
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void findByInventoryName(){
+        // given
+        Inventory inv1 = Inventory.builder()
+                .inventoryName("에어필터")
+                .inventoryCode("AF-001")
+                .currentStock(50)
+                .availableStock(50)
+                .warehouse("서울 창고")
+                .price(15000)
+                .inventoryStatus(InventoryStatus.STABLE)
+                .build();
+
+        inventoryRepository.save(inv1);
+
+        // when
+        List<Inventory> result = inventoryRepository.findByInventoryName("에어필터");
+
+        // then
+        assertThat(result.get(0).getInventoryName()).isEqualTo("에어필터");
+        assertThat(result.get(0).getWarehouse()).isEqualTo("서울 창고");
     }
 }
