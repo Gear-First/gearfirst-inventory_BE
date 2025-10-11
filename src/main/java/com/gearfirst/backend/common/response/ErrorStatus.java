@@ -17,6 +17,8 @@ public enum ErrorStatus {
     /** 404 NOT_FOUND */
     NOT_FOUND_MEMBER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 사용자 입니다."),
     NOT_FOUND_INVENTORY_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 재고입니다."),
+    NOT_FOUND_WAREHOUSE_EXCEPTION(HttpStatus.NOT_FOUND, "창고를 찾을 수 없습니다.."),
+    NOT_FOUND_INVENTORY_FROM_WAREHOUSE_EXCEPTION(HttpStatus.NOT_FOUND, "해당 창고에 재고가 없습니다.."),
 
     /** 500 SERVER_ERROR */
     FAIL_UPLOAD_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR,"파일 업로드 실패하였습니다."),

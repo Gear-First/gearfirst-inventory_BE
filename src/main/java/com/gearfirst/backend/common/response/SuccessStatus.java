@@ -15,6 +15,7 @@ public enum SuccessStatus {
 
     /** 201 CREATED */
     CREATE_SAMPLE_SUCCESS(HttpStatus.CREATED, "샘플 등록 성공"),
+    CREATE_OUTBOUND_ORDER_TO_WAREHOUSE_SUCCESS(HttpStatus.CREATED,"창고에 출고 명령 생성 성공"),
 
     ;
 

@@ -12,11 +12,6 @@ public class InventoryResponse {
     private Long inventoryId;
     private String inventoryName;
     private String inventoryCode;
-    private int currentStock;
-    private int availableStock;
-    private String warehouse;
-    private LocalDateTime inboundDate;
-    private String inventoryStatus;
     private int price;
 
     public static InventoryResponse fromEntity(Inventory inventory) {
@@ -24,11 +19,6 @@ public class InventoryResponse {
                 inventory.getId(),
                 inventory.getInventoryName(),
                 inventory.getInventoryCode(),
-                inventory.getCurrentStock(),
-                inventory.getAvailableStock(),
-                inventory.getWarehouse(),
-                inventory.getInboundDate(),
-                inventory.getInventoryStatus().name(),
                 inventory.getPrice()
         );
     }

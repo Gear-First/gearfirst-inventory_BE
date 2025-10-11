@@ -5,6 +5,7 @@ import com.gearfirst.backend.api.warehouse.entity.Warehouse;
 import com.gearfirst.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,10 +38,11 @@ public class OutboundOrder extends BaseTimeEntity {
     @Column(name ="total_quantity",nullable = false)
     private int totalQuantity;                  //총 출고 금액
 
-    @Column(name ="shipped_date", nullable = false)
-    private LocalDateTime complatedDate;          //완료일
+    @Column(name ="shipped_date")
+    private LocalDateTime completedDate;          //완료일
 
     //생성자 + 빌더
+    @Builder
     public OutboundOrder(Long purchaseOrderId, Warehouse warehouse){
         if (purchaseOrderId == null) throw new IllegalArgumentException("발주 ID가 필요합니다.");
         if (warehouse == null) throw new IllegalArgumentException("창고 정보가 필요합니다.");
@@ -64,7 +66,7 @@ public class OutboundOrder extends BaseTimeEntity {
         if (this.outboundOrderStatus != OutboundOrderStatus.SHIPPED)
             throw new IllegalStateException("배송 완료는 출고 완료 상태에서만 가능합니다.");
         this.outboundOrderStatus = OutboundOrderStatus.COMPLETED;
-        this.complatedDate = LocalDateTime.now();
+        this.completedDate = LocalDateTime.now();
     }
 
     public void cancel() {
