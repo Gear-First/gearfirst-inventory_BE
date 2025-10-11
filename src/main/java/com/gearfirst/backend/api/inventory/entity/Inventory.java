@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * 부품 자체의 유효한 상태를 유지하고, 부품 정보 변경 시 스스로 검증하는 역할
+ */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,61 +29,34 @@ public class Inventory{
     @Column(name = "inventory_code", nullable = false, unique = true, length = 50)
     private String inventoryCode;
 
-    @Column(name = "current_stock", nullable = false)
-    private int currentStock = 0;   // DB 기본값과 맞추기 위해 초기화
-
-    @Column(name = "available_stock", nullable = false)
-    private int availableStock = 0;
-
-    @Column(name = "warehouse", length = 100)
-    private String warehouse;
-
-    @Column(name = "inbound_date", updatable = false, nullable = false)
-    private LocalDateTime inboundDate;
-
     @Column(name = "price", nullable = false)
     private int price;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "inventory_status", nullable = false)
-    private InventoryStatus inventoryStatus = InventoryStatus.STABLE;
+    @Column(nullable = false)
+    private boolean active = true;  //기본값
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.inboundDate == null) {
-            this.inboundDate = LocalDateTime.now();
-        }
-    }
     // === 생성자 + 빌더 ===
     @Builder
-    public Inventory(String inventoryName,
-                     String inventoryCode,
-                     int currentStock,
-                     int availableStock,
-                     String warehouse,
-                     int price,
-                     InventoryStatus inventoryStatus) {
+    public Inventory(String inventoryName, String inventoryCode, int price) {
+        if (price <= 0) throw new IllegalArgumentException("가격은 0보다 커야 합니다.");
         this.inventoryName = inventoryName;
         this.inventoryCode = inventoryCode;
-        this.currentStock = currentStock;
-        this.availableStock = availableStock;
-        this.warehouse = warehouse;
         this.price = price;
-        this.inventoryStatus = inventoryStatus != null ? inventoryStatus : InventoryStatus.STABLE;
     }
 
     // === 도메인 메서드 ===
-    public void increaseStock(int quantity) {
-        if (quantity <= 0) throw new IllegalArgumentException("입고 수량은 0보다 커야 합니다.");
-        this.currentStock += quantity;
-        this.availableStock += quantity;
+    public void deactivate() {
+        this.active = false;
     }
 
-    public void decreaseStock(int quantity) {
-        if (quantity <= 0) throw new IllegalArgumentException("출고 수량은 0보다 커야 합니다.");
-        if (this.availableStock < quantity) throw new IllegalStateException("가용 재고 부족");
-        this.currentStock -= quantity;
-        this.availableStock -= quantity;
+    public void activate() {
+        this.active = true;
+    }
+    public void updateName(String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException("부품명은 비어 있을 수 없습니다.");
+        }
+        this.inventoryName = newName;
     }
 
     public void updatePrice(int newPrice) {
@@ -89,6 +65,14 @@ public class Inventory{
         }
         this.price = newPrice;
     }
+    /**
+     * TODO: inventory code 형식이 회사 규칙에 맞는지 검증
+     */
+//    public void validateCodeFormat() {
+//        if (!this.inventoryCode.matches("^[A-Z]{2}-\\d{3}$")) {
+//            throw new IllegalArgumentException("부품코드는 예: 'BP-001' 형식이어야 합니다.");
+//        }
+//    }
 
 }
 
