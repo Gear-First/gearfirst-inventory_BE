@@ -67,4 +67,17 @@ public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInv
             @Param("warehouse") Warehouse warehouse,
             @Param("inventory") Inventory inventory
     );
+
+    // 차량모델과 연결된 부품 ID + 이름 검색
+    @Query("""
+        SELECT wi FROM WarehouseInventory wi
+        JOIN wi.inventory i
+        JOIN CarModelParts cmp ON cmp.inventory.id = i.id
+        WHERE cmp.carModel.carModelId = :carModelId
+        AND LOWER(i.inventoryName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    """)
+    List<WarehouseInventory> findByCarModelAndKeyword(
+            @Param("carModelId") Long carModelId,
+            @Param("keyword") String keyword
+    );
 }

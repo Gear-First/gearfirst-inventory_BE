@@ -32,6 +32,10 @@ public class Inventory{
     @Column(name = "price", nullable = false)
     private int price;
 
+    private String category;
+    private String descriptions;
+    private String manufacturer;
+
     @Column(nullable = false)
     private boolean active = true;  //기본값
 

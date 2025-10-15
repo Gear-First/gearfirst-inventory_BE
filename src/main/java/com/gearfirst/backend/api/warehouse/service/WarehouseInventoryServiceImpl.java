@@ -1,5 +1,7 @@
 package com.gearfirst.backend.api.warehouse.service;
 
+import com.gearfirst.backend.api.inventory.dto.InventoryResponse;
+import com.gearfirst.backend.api.warehouse.controller.internal.dto.InventoryResponseDto;
 import com.gearfirst.backend.api.warehouse.dto.InventoryInternalResponse;
 import com.gearfirst.backend.api.warehouse.dto.WarehouseInventoryResponse;
 import com.gearfirst.backend.api.warehouse.entity.WarehouseInventory;
@@ -60,10 +62,24 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService{
     }
 
     // 내부 서비스용 응답 DTO 반환
+    @Override
     public InventoryInternalResponse getInventoryInternalResponse(Long id) {
         WarehouseInventory wi = warehouseInventoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_INVENTORY_EXCEPTION.getMessage()));
 
         return InventoryInternalResponse.fromEntity(wi);
     }
+
+    //차량 모델 + 키워드 기반 부품 검색
+    @Override
+    public List<InventoryResponseDto> getInventoriesByCarModel(Long carModelId, String keyword) {
+        List<WarehouseInventory> list =
+                warehouseInventoryRepository.findByCarModelAndKeyword(carModelId, keyword);
+
+        return list.stream()
+                .map(InventoryResponseDto::from)
+                .toList();
+    }
+
+
 }

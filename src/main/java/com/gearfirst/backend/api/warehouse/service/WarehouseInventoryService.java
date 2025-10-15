@@ -1,5 +1,8 @@
 package com.gearfirst.backend.api.warehouse.service;
 
+import com.gearfirst.backend.api.inventory.dto.InventoryResponse;
+import com.gearfirst.backend.api.warehouse.controller.internal.dto.InventoryResponseDto;
+import com.gearfirst.backend.api.warehouse.controller.internal.dto.OutboundRequest;
 import com.gearfirst.backend.api.warehouse.dto.InventoryInternalResponse;
 import com.gearfirst.backend.api.warehouse.dto.WarehouseInventoryResponse;
 
@@ -17,4 +20,8 @@ public interface WarehouseInventoryService {
     public List<WarehouseInventoryResponse> getInventoriesByDate(LocalDate start, LocalDate end);
     // 내부 서비스용 응답 DTO 반환
     InventoryInternalResponse getInventoryInternalResponse(Long id);
+    //서비스 통신용
+    //void createOutboundOrder(OutboundRequest request);
+    List<InventoryResponseDto> getInventoriesByCarModel(Long carModelId, String keyword);
+
 }
