@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 public enum SuccessStatus {
     /** 200 SUCCESS */
     SEND_SAMPLE_SUCCESS(HttpStatus.OK,"샘플 조회 성공"),
+    GET_PART_LIST_SUCCESS(HttpStatus.OK,"부품 리스트 조회 성공"),
+    GET_MATERIAL_LIST_SUCCESS(HttpStatus.OK,"부품의 자재 리스트 조회 성공"),
 
     /** 201 CREATED */
     CREATE_SAMPLE_SUCCESS(HttpStatus.CREATED, "샘플 등록 성공"),

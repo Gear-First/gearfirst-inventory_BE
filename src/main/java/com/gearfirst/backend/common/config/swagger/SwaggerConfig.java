@@ -12,12 +12,12 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         Server server = new Server();
-        server.setUrl("/");
+        server.setUrl("/inventory");
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Inside Movie")
-                        .description("Inside Movie REST API Document")
+                        .title("gearfirst")
+                        .description("gearfirst inventory API")
                         .version("1.0.0"))
                 .addServersItem(server);
     }
