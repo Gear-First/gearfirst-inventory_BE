@@ -19,7 +19,4 @@ public class PartBomEntity {
 
     private String partName;
     private String partCode;
-
-    @OneToMany(mappedBy = "part", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BomInfoEntity> usedMaterials;
 }

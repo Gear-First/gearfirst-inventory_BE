@@ -29,6 +29,5 @@ public class BomInfoEntity {
     @JoinColumn(name = "material_id")
     private MaterialEntity material;
 
-    private int price;
     private int quantity;
 }

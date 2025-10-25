@@ -1,0 +1,49 @@
+package com.gearfirst.backend.api.material.controller;
+
+import com.gearfirst.backend.api.material.dto.MaterialRequest;
+import com.gearfirst.backend.api.material.dto.MaterialResponse;
+import com.gearfirst.backend.api.material.dto.RegistrationResponse;
+import com.gearfirst.backend.api.material.service.MaterialService;
+import com.gearfirst.backend.common.response.ApiResponse;
+import com.gearfirst.backend.common.response.SuccessStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1")
+@Tag(name = "Get Material API", description = "자재 API")
+public class MaterialController {
+    private final MaterialService materialService;
+
+    @Operation(summary = "자재 리스트 조회", description = "등록된 자재 리스트를 조회합니다.")
+    @GetMapping("/getMaterialList")
+    public ResponseEntity<ApiResponse<List<MaterialResponse>>> getMaterialList() {
+        List<MaterialResponse> materials = materialService.getMaterialList();
+        return ApiResponse
+                .success(SuccessStatus.GET_MATERIAL_LIST_SUCCESS, materials);
+    }
+
+    @Operation(summary = "자재 등록", description = "새로운 자재를 등록합니다.")
+    @PostMapping("/addMaterial")
+    public ResponseEntity<ApiResponse<RegistrationResponse>> addMaterial(@RequestBody List<MaterialRequest> materialRequest) {
+        RegistrationResponse response = materialService.addMaterial(materialRequest);
+
+        return ApiResponse
+                .success(SuccessStatus.ADD_MATERIAL_SUCCESS, response);
+    }
+
+    @Operation(summary = "자재 삭제", description = "기존 자재를 삭제합니다.")
+    @PostMapping("/deleteMaterial")
+    public ResponseEntity<ApiResponse<RegistrationResponse>> deleteMaterial(@RequestBody List<MaterialRequest> materialRequest) {
+        RegistrationResponse response = materialService.deleteMaterial(materialRequest);
+
+        return ApiResponse
+                .success(SuccessStatus.DELETE_MATERIAL_SUCCESS, response);
+    }
+}

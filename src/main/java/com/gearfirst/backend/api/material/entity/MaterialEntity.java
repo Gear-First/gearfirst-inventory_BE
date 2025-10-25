@@ -19,4 +19,5 @@ public class MaterialEntity {
 
     private String materialName;
     private String materialCode;
+    private int price;
 }

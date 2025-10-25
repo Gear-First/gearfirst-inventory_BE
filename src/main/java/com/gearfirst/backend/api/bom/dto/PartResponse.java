@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SearchPartResponse {
+public class PartResponse {
+    private Long id;
     private String partName;
     private String partCode;
 }
