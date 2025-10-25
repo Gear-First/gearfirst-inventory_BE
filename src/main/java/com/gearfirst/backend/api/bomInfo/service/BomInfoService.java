@@ -34,6 +34,7 @@ public class BomInfoService {
                 )).toList();
     }
 
+    @Transactional
     public void addMaterialList(MaterialOfPartRequest request) {
         PartBomEntity part = partBomRepository.findById(request.getPartId())
                 .orElseThrow(() -> new RuntimeException("부품 없음"));
