@@ -11,44 +11,45 @@ public class BomSpecification {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    // 각 필드를 검색하는 Specification 메서드들을 정의합니다.
-
-    // 카테고리 검색
+    // 카테고리 검색 (연관된 PartBomEntity의 'category' 필드 검색)
     private static Specification<BomCodeEntity> byCategory(String category) {
-        // "categoryName" 필드가 category 값과 일치하는지 검사
-        return (root, query, cb) -> cb.equal(root.get("categoryName"), category);
+        // root.join("part")를 통해 BomCodeEntity와 연관된 PartBomEntity에 접근
+        return (root, query, cb) -> cb.equal(root.join("part").get("category"), category);
     }
 
-    // 날짜 범위 검색 (이전에 논의한 대로 '종료일 + 1일' 미만으로 검색)
+    // 날짜 범위 검색 (BomCodeEntity가 상속받은 'createdAt' 필드 검색)
     private static Specification<BomCodeEntity> byCreatedAtBetween(String startDateStr, String endDateStr) {
         LocalDate startDate = LocalDate.parse(startDateStr, FORMATTER);
         LocalDate endDate = LocalDate.parse(endDateStr, FORMATTER);
-
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
 
-        return (root, query, cb) -> cb.between(root.get("createdAt"), startDateTime, endDateTime);
+        // (수정) between 대신 >= 와 < 조합으로 변경 (더 안전함)
+        return (root, query, cb) -> cb.and(
+                cb.greaterThanOrEqualTo(root.get("createdAt"), startDateTime), // >= 시작일
+                cb.lessThan(root.get("createdAt"), endDateTime)                 // <  종료일+1일
+        );
     }
 
-    // 키워드 검색 (부품코드 또는 부품명)
+    // 키워드 검색 (BomCodeEntity의 'bomCode' 또는 PartBomEntity의 'partCode', 'partName')
     private static Specification<BomCodeEntity> byKeyword(String keyword) {
         return (root, query, cb) -> {
             String likePattern = "%" + keyword + "%";
-            // WHERE partCode LIKE %keyword% OR partName LIKE %keyword%
+            // 3개의 필드에서 OR 검색
             return cb.or(
-                    cb.like(root.get("partCode"), likePattern),
-                    cb.like(root.get("partName"), likePattern)
+                    cb.like(root.get("bomCode"), likePattern),
+                    cb.like(root.join("part").get("partCode"), likePattern),
+                    cb.like(root.join("part").get("partName"), likePattern)
             );
         };
     }
 
-    // --- 모든 조건을 조합하는 메인 메서드 ---
+    // --- 모든 조건을 조합하는 메인 메서드 (수정됨) ---
     public static Specification<BomCodeEntity> build(String category, String startDate, String endDate, String keyword) {
 
-        // Specification.where(null)은 빈 쿼리로 시작한다는 의미입니다.
+        // '항상 참'인 기본 Spec (WHERE 1=1)
         Specification<BomCodeEntity> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
-        // 각 파라미터가 비어있지 않은 경우에만 쿼리 조건을 추가(and)합니다.
         if (category != null && !category.isEmpty()) {
             spec = spec.and(byCategory(category));
         }

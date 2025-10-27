@@ -1,9 +1,6 @@
 package com.gearfirst.backend.api.bomInfo.controller;
 
-import com.gearfirst.backend.api.bomInfo.dto.BomResponse;
-import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartIdRequest;
-import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartRequest;
-import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartResponse;
+import com.gearfirst.backend.api.bomInfo.dto.*;
 import com.gearfirst.backend.api.bomInfo.service.BomInfoService;
 import com.gearfirst.backend.common.response.ApiResponse;
 import com.gearfirst.backend.common.response.SuccessStatus;
@@ -26,7 +23,7 @@ public class BomInfoController {
 
     @Operation(summary = "BOM 리스트 조회", description = "BOM 리스트를 조회한다.")
     @GetMapping("/getBomList")
-    public ResponseEntity<ApiResponse<Page<BomResponse>>> getBomList(
+    public ResponseEntity<ApiResponse<PageResponse<BomResponse>>> getBomList(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -34,9 +31,15 @@ public class BomInfoController {
             @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
     ) {
         Page<BomResponse> bomList = bomInfoService.getBomList(category, startDate, endDate, keyword, pageable);
-
+        PageResponse<BomResponse> response = new PageResponse<>(
+                bomList.getContent(),
+                bomList.getNumber(),
+                bomList.getSize(),
+                bomList.getTotalElements(),
+                bomList.getTotalPages()
+        );
         return ApiResponse
-                .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, bomList);
+                .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, response);
     }
 
     @Operation(summary = "부품의 자재 리스트 조회", description = "선택한 부품의 자재 리스트를 조회한다.")
