@@ -19,4 +19,5 @@ public class PartBomEntity {
 
     private String partName;
     private String partCode;
+    private String category;
 }

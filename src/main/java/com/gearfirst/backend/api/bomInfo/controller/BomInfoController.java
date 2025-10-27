@@ -1,5 +1,6 @@
 package com.gearfirst.backend.api.bomInfo.controller;
 
+import com.gearfirst.backend.api.bomInfo.dto.BomResponse;
 import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartIdRequest;
 import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartRequest;
 import com.gearfirst.backend.api.bomInfo.dto.MaterialOfPartResponse;
@@ -9,10 +10,11 @@ import com.gearfirst.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,10 +24,25 @@ import java.util.List;
 public class BomInfoController {
     private final BomInfoService bomInfoService;
 
+    @Operation(summary = "BOM 리스트 조회", description = "BOM 리스트를 조회한다.")
+    @GetMapping("/getBomList")
+    public ResponseEntity<ApiResponse<Page<BomResponse>>> getBomList(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
+    ) {
+        Page<BomResponse> bomList = bomInfoService.getBomList(category, startDate, endDate, keyword, pageable);
+
+        return ApiResponse
+                .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, bomList);
+    }
+
     @Operation(summary = "부품의 자재 리스트 조회", description = "선택한 부품의 자재 리스트를 조회한다.")
-    @GetMapping("/getMaterialList/{partId}")
-    public ResponseEntity<ApiResponse<List<MaterialOfPartResponse>>> getMaterialList(@PathVariable Long partId) {
-        List<MaterialOfPartResponse> materialList = bomInfoService.getMaterialList(partId);
+    @GetMapping("/getMaterialList/{bomCodeId}")
+    public ResponseEntity<ApiResponse<List<MaterialOfPartResponse>>> getMaterialList(@PathVariable Long bomCodeId) {
+        List<MaterialOfPartResponse> materialList = bomInfoService.getMaterialList(bomCodeId);
 
         return ApiResponse
                 .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, materialList);
