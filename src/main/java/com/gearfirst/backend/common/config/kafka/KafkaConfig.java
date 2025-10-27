@@ -1,4 +1,4 @@
-package com.gearfirst.receipt.common.config.kafka;
+package com.gearfirst.backend.common.config.kafka;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

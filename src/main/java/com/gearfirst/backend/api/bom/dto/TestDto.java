@@ -1,4 +1,4 @@
-package com.gearfirst.receipt.receiptHistory.dto;
+package com.gearfirst.backend.api.bom.dto;
 
 import lombok.Data;
 
