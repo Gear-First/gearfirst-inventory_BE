@@ -7,20 +7,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
-@Table(name = "material")
+@Table(name = "company")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialEntity extends BaseTimeEntity {
+public class ComponyEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String companyName;
     private String materialName;
     private String materialCode;
     private int price;
-//    private int quantity;
-//    private List<> companies;
+    private int quantity;
+    private LocalDate surveyDate; // 조사일
+    private LocalDate contractDate; // 계약일
+
 }
