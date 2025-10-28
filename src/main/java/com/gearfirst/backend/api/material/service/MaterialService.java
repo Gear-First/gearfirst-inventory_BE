@@ -63,7 +63,8 @@ public class MaterialService {
                 successList.add(new MaterialResponse(
                         saved.getId(),
                         saved.getMaterialName(),
-                        saved.getMaterialCode()
+                        saved.getMaterialCode(),
+                        saved.getCreatedAt().toLocalDate()
                 ));
             } catch (Exception e) {
                 failedList.add(new FailedMaterial(req, e.getMessage()));
@@ -106,7 +107,8 @@ public class MaterialService {
                 successList.add(new MaterialResponse(
                         entity.getId(),
                         entity.getMaterialName(),
-                        entity.getMaterialCode()
+                        entity.getMaterialCode(),
+                        entity.getCreatedAt().toLocalDate()
                 ));
             } catch (Exception e) {
                 failedList.add(new FailedMaterial(req, e.getMessage()));
