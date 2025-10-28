@@ -3,23 +3,38 @@ package com.gearfirst.backend.api.material.service;
 import com.gearfirst.backend.api.material.dto.*;
 import com.gearfirst.backend.api.material.entity.MaterialEntity;
 import com.gearfirst.backend.api.material.repository.MaterialRepository;
+import com.gearfirst.backend.api.material.spec.MaterialSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MaterialService {
     private final MaterialRepository materialRepository;
 
-    public List<MaterialResponse> getMaterialList() {
-        List<MaterialEntity> entities = materialRepository.findAll();
+    public Page<MaterialResponse> getMaterialList(String startDate, String endDate, String keyword, Pageable pageable) {
+        // 1. Specification 클래스를 호출하여 동적 쿼리를 생성합니다.
+        Specification<MaterialEntity> spec = MaterialSpecification.build(startDate, endDate, keyword);
 
-        return entities.stream().map(e ->
-                new MaterialResponse(e.getMaterialName(), e.getMaterialCode())).toList();
+        // 2. 리포지토리의 findAll 메서드에 Specification과 Pageable을 전달합니다.
+        Page<MaterialEntity> materialEntityPage = materialRepository.findAll(spec, pageable);
+
+        // 3. Page<Entity>를 Page<Dto>로 변환하여 반환합니다.
+        return materialEntityPage.map(this::convertToDto);
+    }
+
+    private MaterialResponse convertToDto(MaterialEntity entity) {
+        MaterialResponse dto = new MaterialResponse();
+        dto.setId(entity.getId());
+        dto.setMaterialCode(entity.getMaterialCode());
+        dto.setMaterialName(entity.getMaterialName());
+
+        return dto;
     }
 
     public RegistrationResponse addMaterial(List<MaterialRequest> materialRequests) {
@@ -46,6 +61,7 @@ public class MaterialService {
                 MaterialEntity saved = materialRepository.save(entity);
 
                 successList.add(new MaterialResponse(
+                        saved.getId(),
                         saved.getMaterialName(),
                         saved.getMaterialCode()
                 ));
@@ -88,6 +104,7 @@ public class MaterialService {
                 materialRepository.delete(entity);
 
                 successList.add(new MaterialResponse(
+                        entity.getId(),
                         entity.getMaterialName(),
                         entity.getMaterialCode()
                 ));

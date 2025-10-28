@@ -1,5 +1,6 @@
 package com.gearfirst.backend.api.material.controller;
 
+import com.gearfirst.backend.api.bomInfo.dto.PageResponse;
 import com.gearfirst.backend.api.material.dto.MaterialRequest;
 import com.gearfirst.backend.api.material.dto.MaterialResponse;
 import com.gearfirst.backend.api.material.dto.RegistrationResponse;
@@ -9,6 +10,9 @@ import com.gearfirst.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +25,24 @@ import java.util.List;
 public class MaterialController {
     private final MaterialService materialService;
 
-    @Operation(summary = "자재 리스트 조회", description = "등록된 자재 리스트를 조회합니다.")
+    @Operation(summary = "자재 리스트 조회(검색)", description = "자재 리스트를 조회한다.")
     @GetMapping("/getMaterialList")
-    public ResponseEntity<ApiResponse<List<MaterialResponse>>> getMaterialList() {
-        List<MaterialResponse> materials = materialService.getMaterialList();
+    public ResponseEntity<ApiResponse<PageResponse<MaterialResponse>>> getMaterialList(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
+    ) {
+        Page<MaterialResponse> bomList = materialService.getMaterialList(startDate, endDate, keyword, pageable);
+        PageResponse<MaterialResponse> response = new PageResponse<>(
+                bomList.getContent(),
+                bomList.getNumber(),
+                bomList.getSize(),
+                bomList.getTotalElements(),
+                bomList.getTotalPages()
+        );
         return ApiResponse
-                .success(SuccessStatus.GET_MATERIAL_LIST_SUCCESS, materials);
+                .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, response);
     }
 
     @Operation(summary = "자재 등록", description = "새로운 자재를 등록합니다.")
