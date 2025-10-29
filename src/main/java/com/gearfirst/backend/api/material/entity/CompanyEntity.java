@@ -15,17 +15,18 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ComponyEntity extends BaseTimeEntity {
+public class CompanyEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String companyName;
-    private String materialName;
-    private String materialCode;
     private int price;
     private int quantity;
     private LocalDate surveyDate; // 조사일
-    private LocalDate contractDate; // 계약일
+    private LocalDate untilDate; // 계약일
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_id")
+    private MaterialEntity material;
 }

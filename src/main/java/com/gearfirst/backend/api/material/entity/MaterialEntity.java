@@ -2,10 +2,9 @@ package com.gearfirst.backend.api.material.entity;
 
 import com.gearfirst.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "material")
@@ -21,6 +20,8 @@ public class MaterialEntity extends BaseTimeEntity {
     private String materialName;
     private String materialCode;
     private int price;
-//    private int quantity;
-//    private List<> companies;
+    private int quantity;
+
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, orphanRemoval = true )
+    private List<CompanyEntity> companies;
 }

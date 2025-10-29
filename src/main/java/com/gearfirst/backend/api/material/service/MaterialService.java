@@ -1,9 +1,12 @@
 package com.gearfirst.backend.api.material.service;
 
 import com.gearfirst.backend.api.material.dto.*;
+import com.gearfirst.backend.api.material.entity.CompanyEntity;
 import com.gearfirst.backend.api.material.entity.MaterialEntity;
 import com.gearfirst.backend.api.material.repository.MaterialRepository;
 import com.gearfirst.backend.api.material.spec.MaterialSpecification;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,11 +14,34 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MaterialService {
     private final MaterialRepository materialRepository;
+
+    public void addCompany(CompanyRequest request) {
+        MaterialEntity entity = materialRepository.findById(request.getMaterialId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 자재가 존재하지 않습니다."));
+
+        CompanyEntity company = CompanyEntity.builder()
+                .companyName(request.getCompanyName())
+                .price(request.getPrice())
+                .quantity(request.getQuantity())
+                .surveyDate(request.getSurveyDate())
+                .untilDate(request.getUntilDate())
+                .build();
+
+        int total_quantity = entity.getQuantity() + company.getQuantity();
+        int total_price = entity.getPrice() * entity.getQuantity() + company.getPrice() * company.getQuantity();
+        int per_price = total_price / total_quantity;
+
+        entity.setPrice(per_price);
+        entity.setQuantity(total_quantity);
+        entity.getCompanies().add(company);
+        materialRepository.save(entity);
+    }
 
     public Page<MaterialResponse> getMaterialList(String startDate, String endDate, String keyword, Pageable pageable) {
         // 1. Specification 클래스를 호출하여 동적 쿼리를 생성합니다.
@@ -98,9 +124,10 @@ public class MaterialService {
                     continue;
                 }
 
-                MaterialEntity entity = new MaterialEntity();
-                entity.setMaterialName(req.getMaterialName());
-                entity.setMaterialCode(req.getMaterialCode());
+                MaterialEntity entity = materialRepository.findByMaterialCode(req.getMaterialCode());
+
+                System.out.println(entity.getCreatedAt());
+                System.out.println(entity.getMaterialName());
 
                 materialRepository.delete(entity);
 

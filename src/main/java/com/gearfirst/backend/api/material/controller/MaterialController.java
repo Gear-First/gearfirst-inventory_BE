@@ -1,6 +1,7 @@
 package com.gearfirst.backend.api.material.controller;
 
 import com.gearfirst.backend.api.bomInfo.dto.PageResponse;
+import com.gearfirst.backend.api.material.dto.CompanyRequest;
 import com.gearfirst.backend.api.material.dto.MaterialRequest;
 import com.gearfirst.backend.api.material.dto.MaterialResponse;
 import com.gearfirst.backend.api.material.dto.RegistrationResponse;
@@ -61,5 +62,14 @@ public class MaterialController {
 
         return ApiResponse
                 .success(SuccessStatus.DELETE_MATERIAL_SUCCESS, response);
+    }
+
+    @Operation(summary = "업체 등록", description = "자재 납품 업체 등록")
+    @PostMapping("/addCompany")
+    public ResponseEntity<ApiResponse<Void>> addCompany(@RequestBody CompanyRequest request) {
+        materialService.addCompany(request);
+
+        return ApiResponse
+                .success_only(SuccessStatus.ADD_COMPANY_OF_MATERIAL_SUCCESS);
     }
 }
