@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SkippedMaterial {
+    private Long materialId;
     private String materialCode;
     private String materialName;
     private String reason;

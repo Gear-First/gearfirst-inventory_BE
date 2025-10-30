@@ -17,6 +17,7 @@ public enum SuccessStatus {
     ADD_MATERIAL_OF_PART_SUCCESS(HttpStatus.OK,"부품의 자재 등록 성공"),
     DELETE_MATERIAL_OF_PART_SUCCESS(HttpStatus.OK, "부품의 자재 삭제 성공"),
     ADD_COMPANY_OF_MATERIAL_SUCCESS(HttpStatus.OK,"자재 납품 업체 등록 성공"),
+    SELECT_COMPANY_SUCCESS(HttpStatus.OK,"자재 납품 업체 선정 성공"),
 
     /** 201 CREATED */
     CREATE_SAMPLE_SUCCESS(HttpStatus.CREATED, "샘플 등록 성공"),

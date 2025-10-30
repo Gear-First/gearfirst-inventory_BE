@@ -1,10 +1,7 @@
 package com.gearfirst.backend.api.material.controller;
 
 import com.gearfirst.backend.api.bomInfo.dto.PageResponse;
-import com.gearfirst.backend.api.material.dto.CompanyRequest;
-import com.gearfirst.backend.api.material.dto.MaterialRequest;
-import com.gearfirst.backend.api.material.dto.MaterialResponse;
-import com.gearfirst.backend.api.material.dto.RegistrationResponse;
+import com.gearfirst.backend.api.material.dto.*;
 import com.gearfirst.backend.api.material.service.MaterialService;
 import com.gearfirst.backend.common.response.ApiResponse;
 import com.gearfirst.backend.common.response.SuccessStatus;
@@ -56,9 +53,9 @@ public class MaterialController {
     }
 
     @Operation(summary = "자재 삭제", description = "기존 자재를 삭제합니다.")
-    @PostMapping("/deleteMaterial")
-    public ResponseEntity<ApiResponse<RegistrationResponse>> deleteMaterial(@RequestBody List<MaterialRequest> materialRequest) {
-        RegistrationResponse response = materialService.deleteMaterial(materialRequest);
+    @DeleteMapping("/deleteMaterial")
+    public ResponseEntity<ApiResponse<RegistrationResponse>> deleteMaterial(@RequestBody List<MaterialRequest> request) {
+        RegistrationResponse response = materialService.deleteMaterial(request);
 
         return ApiResponse
                 .success(SuccessStatus.DELETE_MATERIAL_SUCCESS, response);
@@ -71,5 +68,36 @@ public class MaterialController {
 
         return ApiResponse
                 .success_only(SuccessStatus.ADD_COMPANY_OF_MATERIAL_SUCCESS);
+    }
+
+    @Operation(summary = "등록된 업체 리스트 조회(검색)", description = "등록된 업체 리스트를 조회한다.")
+    @GetMapping("/getCompanyList")
+    public ResponseEntity<ApiResponse<PageResponse<CompanyResponse>>> getCompanyList(
+//            @RequestParam(required = false) String startDate,
+//            @RequestParam(required = false) String endDate,
+//            @RequestParam(required = false) String keyword,
+//            @RequestParam(required = false) boolean isSelected,
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
+    ) {
+//        Page<MaterialResponse> bomList = materialService.getCompanyList(startDate, endDate, keyword, pageable);
+        Page<CompanyResponse> bomList = materialService.getCompanyList(pageable);
+        PageResponse<CompanyResponse> response = new PageResponse<>(
+                bomList.getContent(),
+                bomList.getNumber(),
+                bomList.getSize(),
+                bomList.getTotalElements(),
+                bomList.getTotalPages()
+        );
+        return ApiResponse
+                .success(SuccessStatus.GET_MATERIAL_LIST_OF_PART_SUCCESS, response);
+    }
+
+    @Operation(summary = "업체 선정", description = "자재 납품 업체 선정")
+    @PostMapping("/selectCompany")
+    public ResponseEntity<ApiResponse<Void>> selectCompany(@RequestBody List<SelectedCompanyRequest> request) {
+        materialService.selectCompany(request);
+
+        return ApiResponse
+                .success_only(SuccessStatus.SELECT_COMPANY_SUCCESS);
     }
 }

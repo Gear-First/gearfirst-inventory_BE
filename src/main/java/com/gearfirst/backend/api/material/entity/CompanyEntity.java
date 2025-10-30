@@ -21,8 +21,13 @@ public class CompanyEntity extends BaseTimeEntity {
     private Long id;
 
     private String companyName;
+    private String registNum;
     private int price;
     private int quantity;
+    private int spentDay;
+    private int orderCnt;
+    private int totalPrice;
+    private boolean status = false;
     private LocalDate surveyDate; // 조사일
     private LocalDate untilDate; // 계약일
 
