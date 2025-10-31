@@ -1,5 +1,7 @@
 package com.gearfirst.backend.common.config.kafka;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -18,6 +20,7 @@ public class KafkaConfig {
      */
     @Bean
     public DefaultErrorHandler errorHandler(KafkaTemplate<String, Object> template) {
+        Logger log = LoggerFactory.getLogger("KafkaErrorHandler");
 
         // 1초 간격으로 최대 3번 재시도합니다.
         FixedBackOff backOff = new FixedBackOff(1000L, 2L); // 1초 간격, 총 3번 시도 (기본 1번 + 재시도 2번)
@@ -26,7 +29,18 @@ public class KafkaConfig {
         // 자동으로 DLQ 토픽으로 보내는 역할을 합니다.
         // 토픽 이름은 자동으로 "[원본토픽이름].DLT"로 생성됩니다.
 
-        return new DefaultErrorHandler(new DeadLetterPublishingRecoverer(template), backOff);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                new DeadLetterPublishingRecoverer(template),
+                backOff
+        );
+
+        // 에러 발생 시 로그 출력
+        errorHandler.setRetryListeners((record, ex, deliveryAttempt) -> {
+            log.error("Kafka 메시지 처리 실패! 재시도 시도 #{} - 메시지: {}", deliveryAttempt, record, ex);
+        });
+
+//        return new DefaultErrorHandler(new DeadLetterPublishingRecoverer(template), backOff);
+        return errorHandler;
     }
 
     /**

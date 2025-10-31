@@ -14,10 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PartBomEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String partName;
     private String partCode;
     private String category;
+    private String supplierName;
 }
