@@ -44,6 +44,7 @@ public class BomInfoService {
         dto.setCategory(entity.getPart().getCategory());
         dto.setPartCode(entity.getPart().getPartCode());
         dto.setPartName(entity.getPart().getPartName());
+        dto.setPartId(entity.getPart().getId());
         dto.setCreatedAt(entity.getCreatedAt().toLocalDate());
 
         return dto;

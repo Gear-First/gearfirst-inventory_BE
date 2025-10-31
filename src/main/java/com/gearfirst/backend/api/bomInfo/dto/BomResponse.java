@@ -13,6 +13,7 @@ public class BomResponse {
     private Long bomCodeId;
     private String bomCode;
     private String category;
+    private Long partId;
     private String partCode;
     private String partName;
     private LocalDate createdAt;
