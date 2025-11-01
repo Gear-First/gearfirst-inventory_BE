@@ -53,6 +53,7 @@ public class BomInfoService {
     public List<MaterialOfPartResponse> getMaterialList(Long bomCodeId){
         return bomInfoRepository.findByBomCodeId(bomCodeId).stream()
                 .map(b -> new MaterialOfPartResponse(
+                        b.getMaterial().getId(),
                         b.getMaterial().getMaterialName(),
                         b.getMaterial().getMaterialCode(),
                         b.getMaterial().getPrice(),
