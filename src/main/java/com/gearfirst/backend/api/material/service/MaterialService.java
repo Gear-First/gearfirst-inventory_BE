@@ -7,6 +7,7 @@ import com.gearfirst.backend.api.material.entity.MaterialEntity;
 import com.gearfirst.backend.api.material.repository.CompanyRepository;
 import com.gearfirst.backend.api.material.repository.CompanySequenceRepository;
 import com.gearfirst.backend.api.material.repository.MaterialRepository;
+import com.gearfirst.backend.api.material.spec.CompanySpecification;
 import com.gearfirst.backend.api.material.spec.MaterialSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
@@ -122,17 +123,15 @@ public class MaterialService {
         return materialEntityPage.map(this::convertToDto);
     }
 
-//    public Page<CompanyResponse> getCompanyList(String startDate, String endDate, String keyword, Pageable pageable) {
-    public Page<CompanyResponse> getCompanyList(Pageable pageable) {
+    public Page<CompanyResponse> getCompanyList(String endDate, String company, String material, Boolean isSelected, Pageable pageable) {
         // 1. Specification 클래스를 호출하여 동적 쿼리를 생성합니다.
-//        Specification<CompanyEntity> spec = MaterialSpecification.build(startDate, endDate, keyword);
-//
-//        // 2. 리포지토리의 findAll 메서드에 Specification과 Pageable을 전달합니다.
-//        Page<CompanyEntity> companyEntityPage = companyRepository.findAll(spec, pageable);
+        Specification<CompanyEntity> spec = CompanySpecification.build(endDate, company, material, isSelected);
+
+        // 2. 리포지토리의 findAll 메서드에 Specification과 Pageable을 전달합니다.
+        Page<CompanyEntity> companyEntityPage = companyRepository.findAll(spec, pageable);
 
         // 3. Page<Entity>를 Page<Dto>로 변환하여 반환합니다.
-//        return companyEntityPage.map(this::convertToDto);
-        return null;
+        return companyEntityPage.map(this::convertToDto);
     }
 
     private CompanyResponse convertToDto(CompanyEntity entity) {
