@@ -11,22 +11,13 @@ public class CompanySpecification {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private static Specification<CompanyEntity> byMaterial(String material) {
+    private static Specification<CompanyEntity> byKeyword(String keyword) {
         return (root, query, cb) -> {
-            String likePattern = "%" + material + "%";
+            String likePattern = "%" + keyword + "%";
             // 3개의 필드에서 OR 검색
             return cb.or(
                     cb.like(root.join("material").get("materialCode"), likePattern),
-                    cb.like(root.join("material").get("materialName"), likePattern)
-            );
-        };
-    }
-
-    private static Specification<CompanyEntity> byCompany(String company) {
-        return (root, query, cb) -> {
-            String likePattern = "%" + company + "%";
-            // 3개의 필드에서 OR 검색
-            return cb.or(
+                    cb.like(root.join("material").get("materialName"), likePattern),
                     cb.like(root.get("companyName"), likePattern)
             );
         };
@@ -36,16 +27,12 @@ public class CompanySpecification {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<CompanyEntity> build(String company, String material, Boolean isSelected) {
+    public static Specification<CompanyEntity> build(String keyword, Boolean isSelected) {
 
         Specification<CompanyEntity> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
-        if (material != null && !material.isEmpty()) {
-            spec = spec.and(byMaterial(material));
-        }
-
-        if (company != null && !company.isEmpty()) {
-            spec = spec.and(byCompany(company));
+        if (keyword != null && !keyword.isEmpty()) {
+            spec = spec.and(byKeyword(keyword));
         }
 
         if (isSelected != null) {
