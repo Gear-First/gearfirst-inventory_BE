@@ -147,6 +147,7 @@ public class MaterialService {
                 .registNum(entity.getRegistNum())
                 .surveyDate(entity.getSurveyDate())
                 .untilDate(entity.getUntilDate())
+                .createdAt(entity.getCreatedAt())
                 .build();
     }
 

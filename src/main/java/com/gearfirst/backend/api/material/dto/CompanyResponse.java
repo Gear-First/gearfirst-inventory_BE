@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,4 +20,5 @@ public class CompanyResponse {
     private int price;
     private LocalDate untilDate;
     private int orderCnt;
+    private LocalDateTime createdAt;
 }
