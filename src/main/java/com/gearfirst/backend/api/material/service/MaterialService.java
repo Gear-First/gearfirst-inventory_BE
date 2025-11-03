@@ -137,6 +137,8 @@ public class MaterialService {
     private CompanyResponse convertToDto(CompanyEntity entity) {
         return CompanyResponse.builder()
                 .materialName(entity.getMaterial().getMaterialName())
+                .materialCode(entity.getMaterial().getMaterialCode())
+                .spendDay(entity.getSpentDay())
                 .companyId(entity.getId())
                 .orderCnt(entity.getOrderCnt())
                 .companyName(entity.getCompanyName())
