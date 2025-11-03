@@ -11,15 +11,6 @@ public class CompanySpecification {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private static Specification<CompanyEntity> byUntilDate(String endDateStr) {
-        LocalDate endDate = LocalDate.parse(endDateStr, FORMATTER);
-        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
-
-        return (root, query, cb) -> cb.and(
-                cb.lessThan(root.get("untilDate"), endDateTime)                 // <  종료일+1일
-        );
-    }
-
     private static Specification<CompanyEntity> byMaterial(String material) {
         return (root, query, cb) -> {
             String likePattern = "%" + material + "%";
@@ -45,13 +36,9 @@ public class CompanySpecification {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
-    public static Specification<CompanyEntity> build(String endDate, String company, String material, Boolean isSelected) {
+    public static Specification<CompanyEntity> build(String company, String material, Boolean isSelected) {
 
         Specification<CompanyEntity> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
-
-        if (endDate != null && !endDate.isEmpty()) {
-            spec = spec.and(byUntilDate(endDate));
-        }
 
         if (material != null && !material.isEmpty()) {
             spec = spec.and(byMaterial(material));

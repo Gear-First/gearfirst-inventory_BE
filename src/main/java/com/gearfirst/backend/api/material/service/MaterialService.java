@@ -123,9 +123,9 @@ public class MaterialService {
         return materialEntityPage.map(this::convertToDto);
     }
 
-    public Page<CompanyResponse> getCompanyList(String endDate, String company, String material, Boolean isSelected, Pageable pageable) {
+    public Page<CompanyResponse> getCompanyList(String company, String material, Boolean isSelected, Pageable pageable) {
         // 1. Specification 클래스를 호출하여 동적 쿼리를 생성합니다.
-        Specification<CompanyEntity> spec = CompanySpecification.build(endDate, company, material, isSelected);
+        Specification<CompanyEntity> spec = CompanySpecification.build(company, material, isSelected);
 
         // 2. 리포지토리의 findAll 메서드에 Specification과 Pageable을 전달합니다.
         Page<CompanyEntity> companyEntityPage = companyRepository.findAll(spec, pageable);

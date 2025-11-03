@@ -73,13 +73,12 @@ public class MaterialController {
     @Operation(summary = "등록된 업체 리스트 조회(검색)", description = "등록된 업체 리스트를 조회한다.")
     @GetMapping("/getCompanyList")
     public ResponseEntity<ApiResponse<PageResponse<CompanyResponse>>> getCompanyList(
-            @RequestParam(required = false) String endDate,
             @RequestParam(required = false) String company,
             @RequestParam(required = false) String material,
             @RequestParam(required = false) Boolean isSelected,
             @PageableDefault(size = 10, sort = "createdAt") Pageable pageable
     ) {
-        Page<CompanyResponse> bomList = materialService.getCompanyList(endDate, company, material, isSelected, pageable);
+        Page<CompanyResponse> bomList = materialService.getCompanyList(company, material, isSelected, pageable);
         PageResponse<CompanyResponse> response = new PageResponse<>(
                 bomList.getContent(),
                 bomList.getNumber(),
