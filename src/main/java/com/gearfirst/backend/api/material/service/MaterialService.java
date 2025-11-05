@@ -156,6 +156,7 @@ public class MaterialService {
         dto.setId(entity.getId());
         dto.setMaterialCode(entity.getMaterialCode());
         dto.setMaterialName(entity.getMaterialName());
+        dto.setCreatedAt(entity.getCreatedAt().toLocalDate());
 
         return dto;
     }
