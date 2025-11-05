@@ -52,6 +52,15 @@ public class MaterialController {
                 .success(SuccessStatus.ADD_MATERIAL_SUCCESS, response);
     }
 
+    @Operation(summary = "자재 수정", description = "등록된 자재를 수정합니다.")
+    @PostMapping("/updateMaterial")
+    public ResponseEntity<ApiResponse<Void>> updateMaterial(@RequestBody MaterialRequest materialRequest) {
+        materialService.updateMaterial(materialRequest);
+
+        return ApiResponse
+                .success_only(SuccessStatus.UPDATE_MATERIAL_SUCCESS);
+    }
+
     @Operation(summary = "자재 삭제", description = "기존 자재를 삭제합니다.")
     @DeleteMapping("/deleteMaterial")
     public ResponseEntity<ApiResponse<RegistrationResponse>> deleteMaterial(@RequestBody List<MaterialRequest> request) {

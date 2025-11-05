@@ -11,6 +11,7 @@ import com.gearfirst.backend.api.material.spec.CompanySpecification;
 import com.gearfirst.backend.api.material.spec.MaterialSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,17 @@ public class MaterialService {
     private final MaterialRepository materialRepository;
     private final CompanySequenceRepository companySequenceRepository;
     private final CompanyRepository companyRepository;
+
+    @Transactional
+    public void updateMaterial(MaterialRequest request) {
+        MaterialEntity entity = materialRepository.findById(request.getMaterialId())
+                .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
+
+        entity.setMaterialCode(request.getMaterialCode());
+        entity.setMaterialName(request.getMaterialName());
+
+        materialRepository.save(entity);
+    }
 
     @Transactional
     public void selectCompany(List<SelectedCompanyRequest> request) {
